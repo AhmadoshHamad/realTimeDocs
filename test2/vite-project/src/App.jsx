@@ -8,6 +8,9 @@ import DashboardPage from './pages/DashboardPage';
 import HomePage from './pages/HomePage';
 import EditorPage from './pages/EditorPage';
 
+import { Provider } from 'react-redux'; // Ensure this is imported correctly
+import store from './store'; // Adjust the path if necessary
+
 
 
 const router = createBrowserRouter(
@@ -23,44 +26,8 @@ const socket = io('http://localhost:5000');
 
 export default function App() {
   return (
-    <RouterProvider router={router}/>
-   
-  
-  // const [message, setMessage] = useState('');
-  // const [messages, setMessages] = useState([]);
-
-  // useEffect(() => {
-  //   // Listen for incoming messages
-  //   socket.on('receive_message', (data) => {
-  //     setMessages((prevMessages) => [...prevMessages, data]);
-  //     setMessage(data.message); // Update the textarea with the received message
-  //   });
-
-  //   return () => {
-  //     socket.off('receive_message');
-  //   };
-  // }, []);
-
-  // const handleChange = (e) => {
-  //   const newMessage = e.target.value;
-  //   setMessage(newMessage);
-
-  //   // Send the message after the state has been updated
-  //   socket.emit('send_message', { message: newMessage });
-  // };
-
-  // return (
-  //   <div className="App">
-  //     <textarea
-  //       onChange={handleChange}
-  //       placeholder="Type your message here..."
-  //       value={message} // This will show the last received message in the textarea
-  //     ></textarea>
-  //     <div>
-  //       {messages.map((msg, index) => (
-  //         <p key={index}>{msg.message}</p>
-  //       ))}
-  //     </div>
-  //   </div>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   );
 }

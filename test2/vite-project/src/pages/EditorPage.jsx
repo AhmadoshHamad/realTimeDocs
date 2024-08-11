@@ -1,39 +1,40 @@
-import React, { useEffect, useRef, useState } from 'react';
-import io from 'socket.io-client';
+import React, { useEffect,useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Editor } from '@tinymce/tinymce-react';
 import SideBar from '../components/SideBar';
+import { setMessage } from '../actions';
+import io from 'socket.io-client';
 
 const socket = io('http://localhost:5000');
 
-
-
-
 const EditorPage = () => {
-    const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState([]);
-    
+    const dispatch = useDispatch();
+    const message = useSelector((state) => state.editor.message);
     const typingTimeoutRef = useRef(null);
-
 
     useEffect(() => {
         // Listen for incoming messages
         socket.on('receive_message', (data) => {
-            setMessage(data.message); // Update the editor with the received message
-            setMessages((prevMessages) => [...prevMessages, data]);
+            dispatch(setMessage(data.message)); // Update the editor with the received message
         });
 
         return () => {
             socket.off('receive_message');
         };
-    }, []);
+    }, [dispatch]);
 
+    // const handleChange = (newMessage) => {
+    //     dispatch(setMessage(newMessage));
+    //     socket.emit('send_message', { message: newMessage });
+    // };
     const handleChange = (newMessage) => {
         // Clear any previous typing timeout
         if (typingTimeoutRef.current) {
             clearTimeout(typingTimeoutRef.current);
         }
 
-        setMessage(newMessage);
+        // setMessage(newMessage);
+        dispatch(setMessage(newMessage));
 
         // Set a new typing timeout
         typingTimeoutRef.current = setTimeout(() => {
@@ -43,11 +44,8 @@ const EditorPage = () => {
         }, 250); // Adjust the delay (in milliseconds) as necessary
     };
 
-
-
     return (
         <>
-            
             <SideBar />
             <div className="" style={{ marginLeft: '300px' }}>
                 <Editor
