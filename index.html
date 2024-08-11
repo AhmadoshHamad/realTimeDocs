@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                clifford: '#da373d',
+              },
+              fontFamily: {
+                roboto: ['Roboto', 'sans-serif'],
+              }
+            }
+          }
+        }
+      </script>
+       <style type="text/tailwindcss">
+        @layer utilities {
+          .content-auto {
+            content-visibility: auto;
+          }
+          .hover-black-and-white:hover {
+            @apply bg-black text-white rounded-md;
+        }
+        .hover-transparent-and-black:hover {
+            @apply bg-transparent text-black border-2 border-black;
+}
+        }
+      </style>
+</head>
+<body class="h-screen w-screen">
+    <!-- <script src="practice.js"></script> -->
+     
+
+    
+    
+</body>
+
+<style>
+    .body{
+        margin: 0;
+        padding: 0;
+        font-family: Roboto;
+    }
+</style>
+</html>
+
+

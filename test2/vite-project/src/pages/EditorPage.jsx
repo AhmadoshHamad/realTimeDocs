@@ -1,4 +1,4 @@
-import React, { useEffect,useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Editor } from '@tinymce/tinymce-react';
 import SideBar from '../components/SideBar';
@@ -23,25 +23,19 @@ const EditorPage = () => {
         };
     }, [dispatch]);
 
-    // const handleChange = (newMessage) => {
-    //     dispatch(setMessage(newMessage));
-    //     socket.emit('send_message', { message: newMessage });
-    // };
     const handleChange = (newMessage) => {
         // Clear any previous typing timeout
         if (typingTimeoutRef.current) {
             clearTimeout(typingTimeoutRef.current);
         }
 
-        // setMessage(newMessage);
         dispatch(setMessage(newMessage));
 
         // Set a new typing timeout
         typingTimeoutRef.current = setTimeout(() => {
-            // Send the message after typing has stopped
-            socket.emit('send_message', { message: newMessage });
+            dispatch({ type: 'SEND_MESSAGE', payload: newMessage });
             typingTimeoutRef.current = null;
-        }, 250); // Adjust the delay (in milliseconds) as necessary
+        }, 250);
     };
 
     return (

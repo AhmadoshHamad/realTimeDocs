@@ -1,0 +1,17 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.btn{
+    background-color: #2f2e41;
+    transition: background-color 0.5s;
+}
+
+.hover-black-and-white:hover {
+    @apply bg-black text-white rounded-md;
+}
+.hover-transparent-and-black:hover {
+    @apply bg-transparent text-black border-2 border-black ;
+}
