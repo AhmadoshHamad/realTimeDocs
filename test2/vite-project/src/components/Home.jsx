@@ -11,7 +11,7 @@ const Home = () => {
     }
 
   return (
-    <div className=" w-full  h-3/4  flex flex-col" >
+    <div className=" w-full  h-3/4  flex flex-col " >
         <div className="row rounded-lg mt-5 m-7 mb-3 pb-8" style={{ backgroundColor: '#8eddec' }}>
             <nav className="bg-transparent px-4">
                     <div className="grid grid-cols-8 h-16">
@@ -56,7 +56,7 @@ const Home = () => {
         </div>
         {/* <!-- bottom bar section --> */}
         <section className="mt-2 px-4">
-            <div className="grid lg:grid-cols-4 grid-cols-2  px-3 gap-x-4">
+            <div className="grid lg:grid-cols-4 grid-cols-2  px-3 gap-4 ">
                 <div className="col-span-1 bg-indigo-400 p-2 px-4 pb-4 rounded-2xl">
                     <div className="card grid grid-rows-2">
                         <div className="row-span-1"></div>

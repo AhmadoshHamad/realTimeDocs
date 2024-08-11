@@ -5,5 +5,6 @@ export function dropdown() {
   
   export function openSidebar() {
     document.querySelector(".sidebar").classList.toggle("hidden");
+    
   }
   
