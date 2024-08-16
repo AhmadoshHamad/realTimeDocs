@@ -4,12 +4,16 @@ import io from 'socket.io-client';
 
 import { Route,createBrowserRouter,createRoutesFromElements, RouterProvider, Router} from 'react-router-dom'
 import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
+import DocsDashboardPage from './pages/DocsDashboardPage';
+import SheetDashboardPage from './pages/SheetDashboardPage';
 import HomePage from './pages/HomePage';
 import EditorPage from './pages/EditorPage';
 
-import { Provider } from 'react-redux'; // Ensure this is imported correctly
+import { Provider } from 'react-redux';
 import store from './store'; // Adjust the path if necessary
+import SheetPage from './pages/SheetPage';
+import TestPage from './pages/TestPage';
+import Playground from './pages/Playground';
 
 
 
@@ -17,8 +21,12 @@ const router = createBrowserRouter(
   [
     { path: "/", element: <HomePage /> },
     { path: "/login", element: <LoginPage /> },
-    { path: "/dashboard", element: <DashboardPage /> },
-    { path: "/editor", element: <EditorPage /> },
+    { path: "/docs", element: <DocsDashboardPage /> },
+    { path: "/sheets", element: <SheetDashboardPage /> },
+    { path: "/editor/:id", element: <EditorPage /> },
+    { path: "/sheetEditor", element: <SheetPage /> },
+    { path: "/test", element: <TestPage /> },
+    { path: "/playground", element: <Playground /> },
   ]
 );
   

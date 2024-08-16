@@ -1,4 +1,4 @@
-import React, { useEffect, useRef,useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Editor } from '@tinymce/tinymce-react';
 import SideBar from '../components/SideBar';
@@ -6,6 +6,8 @@ import { setMessage } from '../actions';
 import io from 'socket.io-client';
 import '../cssFiles/editor.css';
 import axios from 'axios';
+import { Spreadsheet } from 'react-spreadsheet';
+import { useParams,useLoaderData } from 'react-router-dom';
 
 const socket = io('http://localhost:5000');
 
@@ -15,15 +17,12 @@ const EditorPage = () => {
     const typingTimeoutRef = useRef(null);
     const [data, setData] = useState(null);
     const[documents, setDocuments] = useState([]);
-
-    // useEffect(() => {
-    //     axios.get('http://localhost:5000/documents/')
-    // });
-    
+    const {id} = useParams();   
+    // const document =  useLoaderData();
 
     useEffect(() => {
         // Replace with your API endpoint
-        axios.get('http://localhost:5000/documents/1')
+        axios.get(`http://localhost:5000/documents/${id}`)
             .then(response => {
                 setData(response.data);
                 setMessage(response.data.document_content);
@@ -50,7 +49,7 @@ const EditorPage = () => {
     }, [dispatch]);
 
 
-   
+
 
 
     // handles the change in the editor
@@ -67,8 +66,8 @@ const EditorPage = () => {
             dispatch({ type: 'SEND_MESSAGE', payload: newMessage });
             typingTimeoutRef.current = null;
 
-            axios.put('http://localhost:5000/documents/1',{
-                id : 1,
+            axios.put(`http://localhost:5000/documents/${id}`,{
+                id : id,
                 document_content: newMessage
             })
             .then(response => {
@@ -83,23 +82,19 @@ const EditorPage = () => {
               
             });
 
-        }, 300);
+        }, 300); // 300ms timeout
     };
 
-
-    // useEffect(() => {
-    //     id = localStorage.getItem('id');
-    //     axios.get(`http://localhost:5000/documents/${id}/users`)
-    // },[]);
 
 
     return (
         <>
-            <SideBar  />
+            <SideBar isDocs={true} />
             <div className="extended" >
                 <Editor
                     apiKey='wsydvry22j6a0sfnfvdqruw5e722cy7bsuqomzhhqqhl0k9p'
                     init={{
+                        height: '1000px',
                         plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
                         toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
                         tinycomments_mode: 'embedded',
@@ -111,12 +106,23 @@ const EditorPage = () => {
                         ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
                     }}
                     initialValue={data?.document_content}
+                    // initialValue={message}
                     onEditorChange={handleChange}
-                    value={message}
+                    // value={message}
                 />
             </div>
         </>
     );
 };
 
+// const documentLoader = async ({params, setData, setMessage}) => {
+//     const response = await fetch(`http://localhost:5000/documents/${params.id}`);
+//     const data = await response.json();
+//     setData(response.data);
+//     setMessage(data.document_content);
+//     console.log(response.data.document_content);
+//     return data;
+// };
+
+// export  {EditorPage as default, documentLoader};
 export default EditorPage;

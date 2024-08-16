@@ -9,3 +9,11 @@ export const setMessage = (message) => ({
     payload: message,
   });
   
+  // actions.js
+export const CREATE_DOCUMENT = 'CREATE_DOCUMENT';
+export const ADD_DOCUMENT = 'ADD_DOCUMENT';
+
+export const createDocument = (documentData) => ({
+  type: CREATE_DOCUMENT,
+  payload: documentData,
+});

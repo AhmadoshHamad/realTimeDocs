@@ -3,8 +3,9 @@ import { useEffect,useState } from 'react';
 import { dropdown,openSidebar } from './sidebarMethods';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-const SideBar = () => {
-
+const SideBar = ({isDocs}) => {
+  console.log(isDocs);
+  
     // const [isSubmenuHidden, setIsSubmenuHidden] = useState(true);
     // const [isArrowRotated, setIsArrowRotated] = useState(false);
     // const [isSidebarHidden, setIsSidebarHidden] = useState(false);
@@ -12,52 +13,53 @@ const SideBar = () => {
     // const [id, setId] = useState(1);
      
     const navigate = useNavigate();
-
+    const id = localStorage.getItem('id'); 
     useEffect(() => {
-      const fetchDocuments = async () => {
-        const id = 1; // Hardcoded ID
-  
-        // Check if ID is correctly set
-        if (typeof id === 'undefined' || id === null) {
-          alert("No ID found!");
-          navigate('/login'); // Redirect to login page
-          return;
-        }
-  
-        try {
-          const response = await axios.get(`http://127.0.0.1:5000/users/${id}/documents`);
-          console.log(response.data);
-          setDocuments(response.data);
-        } catch (error) {
-          console.error("Error fetching documents:", error.response || error.message);
-          alert("Failed to fetch documents. Please check the console for details.");
-        }
+      const fetchData = async () => {
+        const id = localStorage.getItem('id');
+        const response = await axios.get(`http://localhost:5000/users/${id}/documents`);
+        console.log(response.data);
+        setDocuments(response.data);
       };
+    
+      fetchData();
+    }, []);
+
+    // useEffect(() => {
+    //   const fetchDocuments = async () => {
+    //     const id = localStorage.getItem('id'); // Hardcoded ID
   
-      fetchDocuments();
-    }, [navigate]);
+    //     // Check if ID is correctly set
+    //     if (typeof id === 'undefined' || id === null) {
+    //       alert("No ID found!");
+    //       navigate('/login'); // Redirect to login page
+    //       return;
+    //     }
+  
+    //     try {
+    //       const response = await axios.get(`http://127.0.0.1:5000/users/${id}/documents`);
+    //       console.log(response.data);
+    //       setDocuments(response.data);
+    //     } catch (error) {
+    //       console.error("Error fetching documents:", error.response || error.message);
+    //       alert("Failed to fetch documents. Please check the console for details.");
+    //     }
+    //   };
+  
+    //   fetchDocuments();
+    // }, [navigate]);
     
     const createDoc= () =>{
       console.log("hello");
       
     }
 
-    // useEffect(() => {
-    //     const link = document.createElement('link');
-    //     link.rel = 'stylesheet';
-    //     link.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css';
-    //     document.head.appendChild(link);
-    
-    //     return () => {
-    //       document.head.removeChild(link);
-    //     };
-    //   }, []);
 
 
-      const logout = () => {
-        localStorage.clear();
-        window.location.href = '/';
-      }
+    function logout(){
+      localStorage.removeItem('id');
+      window.location.href = '/login';
+    }
 
 
   
@@ -84,21 +86,22 @@ return (
         <div className="my-2 bg-gray-600 h-[1px]"></div>
       </div>
       <div
-        className="p-2.5 flex items-center rounded-md px-4 duration-300 cursor-pointer bg-gray-700 text-white"
+        className="p-x-2.5 flex items-center rounded-md px-4 duration-300 cursor-pointer bg-gray-700 text-white"
       >
         <i className="bi bi-search text-sm"></i>
         <input
           type="text"
           placeholder="Search"
-          className="text-[15px] ml-4 w-full bg-transparent focus:outline-none"
+          className="text-[15px] ml-4 w-full bg-transparent border-none"
+          style={{ outline: 'none' }}
         />
       </div>
-      <div
+      <a href={isDocs?'/docs':'/sheets'}
         className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
       >
         <i className="bi bi-house-door-fill"></i>
         <span className="text-[15px] ml-4 text-gray-200 font-bold">Home</span>
-      </div>
+      </a>
       <div
         className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
       >
@@ -111,7 +114,7 @@ return (
         onClick={dropdown}
       >
         {/* <i className="bi bi-chat-left-text-fill"></i> */}
-        <i class="bi bi-file-earmark-fill"></i>
+        <i className="bi bi-file-earmark-fill"></i>
         <div className="flex justify-between w-full items-center">
           <span className="text-[15px] ml-4 text-gray-200 font-bold">Docs</span>
           <span className="text-sm rotate-180" id="arrow">
@@ -127,21 +130,17 @@ return (
         <p>No documents available.</p>
       ) : (
         documents.map((doc) => (
-          <h1
+          <a
             key={doc.id} // Ensure each item has a unique key
-            className="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1"
+            className="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1 block"
+            href={`/editor/${doc.id}`}
           >
             {doc.name} {/* Assuming 'name' is the field to display */}
-          </h1>
+          </a>
         ))
       )}
     </div>
-      <div
-        className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-      >
-        <i className="bi bi-box-arrow-in-right"></i>
-        <button className="text-[15px] ml-4 text-gray-200 font-bold" type='submit' onClick={createDoc}>create</button>
-      </div>
+      
       <div
         className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
       >
