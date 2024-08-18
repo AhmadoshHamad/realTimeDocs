@@ -11,7 +11,7 @@ const Navbar = () => {
             {/* <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Tapit</span> */}
          </a>
          <div class="flex md:order space-x-3 mr-5 ">
-            <Link to='/login' type="button" className="px-6 py-2 text-white bg-stone-950 hover-transparent-and-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm  text-center dark:bg-blue-950 dark:hover:bg-blue-950 dark:focus:ring-blue-800">Login</Link>
+            <Link to='/login' type="button" className="px-9 py-[10px] text-white bg-stone-950 hover-transparent-and-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold text-[16px] rounded-lg text-sm  text-center dark:bg-blue-950 dark:hover:bg-blue-950 dark:focus:ring-blue-800">Login</Link>
          </div>   
       
 

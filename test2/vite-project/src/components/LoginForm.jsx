@@ -26,7 +26,7 @@ const Login = () => {
         event.preventDefault(); // Prevent default form submission
 
         try {
-            const response = await axios.post('http://localhost:5000/login', {
+            const response = await axios.post('http://172.23.194.171:5000/login', {
                 email: email,
                 password: password
             });
@@ -42,7 +42,8 @@ const Login = () => {
             // navigate('/docs'); // Use navigate for redirecting
         } catch (error) {
             console.error(error);
-            alert("Login failed. Please check your credentials.");
+            alert(error);
+            // alert("Login failed. Please check your credentials.");
         }
     };
 
@@ -51,7 +52,7 @@ const Login = () => {
         event.preventDefault(); // Prevent default form submission
 
         try {
-            const response = await axios.post('http://localhost:5000/register', {
+            const response = await axios.post('http://172.23.194.171:5000/register', {
                 username : username,
                 email: email,
                 password: password

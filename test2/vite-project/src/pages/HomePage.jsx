@@ -3,7 +3,9 @@ import Home from '../components/Home'
 const HomePage = () => {
   return (
     <>
-     <div className="h-screen w-screen bg-indigo-400 flex justify-center">
+     <div className="h-screen w-screen  flex justify-center 
+    bg-indigo-300
+     ">
       <Home />
 
     </div>

@@ -9,9 +9,9 @@ import axios from 'axios';
 import { Spreadsheet } from 'react-spreadsheet';
 import { useParams,useLoaderData } from 'react-router-dom';
 
-const socket = io('http://localhost:5000');
+const socket = io('http://172.23.194.171:5000');
 
-const EditorPage = () => {
+const DocsEditorPage = () => {
     const dispatch = useDispatch();
     const message = useSelector((state) => state.editor.message);
     const typingTimeoutRef = useRef(null);
@@ -22,7 +22,7 @@ const EditorPage = () => {
 
     useEffect(() => {
         // Replace with your API endpoint
-        axios.get(`http://localhost:5000/documents/${id}`)
+        axios.get(`http://172.23.194.171:5000/documents/${id}`)
             .then(response => {
                 setData(response.data);
                 setMessage(response.data.document_content);
@@ -66,7 +66,7 @@ const EditorPage = () => {
             dispatch({ type: 'SEND_MESSAGE', payload: newMessage });
             typingTimeoutRef.current = null;
 
-            axios.put(`http://localhost:5000/documents/${id}`,{
+            axios.put(`http://172.23.194.171:5000/documents/${id}`,{
                 id : id,
                 document_content: newMessage
             })
@@ -91,6 +91,7 @@ const EditorPage = () => {
         <>
             <SideBar isDocs={true} />
             <div className="extended" >
+                {/* <textarea className='w-full' name="" id="" onChange={handleChange}  value={data?.document_content} ></textarea> */}
                 <Editor
                     apiKey='wsydvry22j6a0sfnfvdqruw5e722cy7bsuqomzhhqqhl0k9p'
                     init={{
@@ -108,7 +109,7 @@ const EditorPage = () => {
                     initialValue={data?.document_content}
                     // initialValue={message}
                     onEditorChange={handleChange}
-                    // value={message}
+                    value={message} 
                 />
             </div>
         </>
@@ -116,7 +117,7 @@ const EditorPage = () => {
 };
 
 // const documentLoader = async ({params, setData, setMessage}) => {
-//     const response = await fetch(`http://localhost:5000/documents/${params.id}`);
+//     const response = await fetch(`http://172.23.194.171:5000/documents/${params.id}`);
 //     const data = await response.json();
 //     setData(response.data);
 //     setMessage(data.document_content);
@@ -125,4 +126,4 @@ const EditorPage = () => {
 // };
 
 // export  {EditorPage as default, documentLoader};
-export default EditorPage;
+export default DocsEditorPage;

@@ -17,7 +17,7 @@ const SideBar = ({isDocs}) => {
     useEffect(() => {
       const fetchData = async () => {
         const id = localStorage.getItem('id');
-        const response = await axios.get(`http://localhost:5000/users/${id}/documents`);
+        const response = await axios.get(`http://172.23.194.171:5000/users/${id}/documents`);
         console.log(response.data);
         setDocuments(response.data);
       };
@@ -37,7 +37,7 @@ const SideBar = ({isDocs}) => {
     //     }
   
     //     try {
-    //       const response = await axios.get(`http://127.0.0.1:5000/users/${id}/documents`);
+    //       const response = await axios.get(`http://172.23.194.171:5000/users/${id}/documents`);
     //       console.log(response.data);
     //       setDocuments(response.data);
     //     } catch (error) {
@@ -126,7 +126,7 @@ return (
       className="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold"
       id="submenu"
     >
-      {documents.length === 0 ? (
+      {(documents.length === 0 || isDocs) ? (
         <p>No documents available.</p>
       ) : (
         documents.map((doc) => (

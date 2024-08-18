@@ -7,7 +7,7 @@ import LoginPage from './pages/LoginPage';
 import DocsDashboardPage from './pages/DocsDashboardPage';
 import SheetDashboardPage from './pages/SheetDashboardPage';
 import HomePage from './pages/HomePage';
-import EditorPage from './pages/EditorPage';
+import DocsEditorPage from './pages/DocsEditorPage';
 
 import { Provider } from 'react-redux';
 import store from './store'; // Adjust the path if necessary
@@ -23,14 +23,14 @@ const router = createBrowserRouter(
     { path: "/login", element: <LoginPage /> },
     { path: "/docs", element: <DocsDashboardPage /> },
     { path: "/sheets", element: <SheetDashboardPage /> },
-    { path: "/editor/:id", element: <EditorPage /> },
-    { path: "/sheetEditor", element: <SheetPage /> },
+    { path: "/editor/:id", element: <DocsEditorPage /> },
+    { path: "/sheetEditor/:id", element: <SheetPage /> },
     { path: "/test", element: <TestPage /> },
     { path: "/playground", element: <Playground /> },
   ]
 );
   
-const socket = io('http://localhost:5000');
+const socket = io('http://172.23.194.171:5000');
 
 export default function App() {
   return (

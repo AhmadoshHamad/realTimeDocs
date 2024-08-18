@@ -7,8 +7,9 @@ import io from 'socket.io-client';
 import '../cssFiles/editor.css';
 import axios from 'axios';
 import { Spreadsheet } from 'react-spreadsheet';
+import { useParams,useLoaderData } from 'react-router-dom';
 
-const socket = io('http://localhost:5000');
+const socket = io('http://172.23.194.171:5000');
 
 const SheetPage = () => {
     const dispatch = useDispatch();
@@ -16,45 +17,47 @@ const SheetPage = () => {
     const typingTimeoutRef = useRef(null);
     const [, setData] = useState(null);
     const[documents, setDocuments] = useState([]);
-    const [spreadsheetData, setSpreadsheetData] = useState( [
-        [ {},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}, ] ,
-        [ { value: "Strawberry" } , { value: "Cookies" } ] ,
-        [] ]);
+    const {id} = useParams();  
 
-    // useEffect(() => {
-    //     axios.get('http://localhost:5000/documents/')
-    // });
     
-
-    // useEffect(() => {
-    //     // Replace with your API endpoint
-    //     axios.get('http://localhost:5000/documents/1')
-    //         .then(response => {
-    //             setData(response.data);
-    //             setMessage(response.data.document_content);
-    //             console.log(response.data.document_content);
-                
-    //             // setLoading(false);
-    //         })
-    //         .catch(error => {
-    //            console.log(error);
-              
-    //         });
-    // }, []);
+    const [spreadsheetData, setSpreadsheetData] = useState( [[{ 'value': 'A1' }, { 'value': 'B1' }, { 'value': 'C1' }], [{ 'value': 'A2' }, { 'value': 'B2' }, { 'value': 'C2' }], [{ 'value': 'A3' }, { 'value': 'B3' }, { 'value': 'C3' }]]);
+    
+ 
+    useEffect(() => {
+        axios.get(`http://172.23.194.171:5000/documents/${id}`)
+            .then(response => {
+                let dataString = response.data.document_content;
+    
+                // Replace single quotes with double quotes
+                dataString = dataString.replace(/'/g, '"');
+    
+                // Parse the JSON string
+                const data = JSON.parse(dataString);
+                setSpreadsheetData(data);
+                console.log(data);
+            })
+            .catch(error => {
+               console.error('Error fetching data:', error);
+            });
+    }, []);
+    
+    
+    
+    
 
     // Listen for incoming messages using redux saga
     useEffect(() => {
         // Listen for incoming messages
         socket.on('receive_message', (data) => {
             // dispatch(setMessage(data.message)); // Update the editor with the received message
-            const splittedData = data.message.split(',');
-            const newData = splittedData.map((item) => {
-                return { value: item.trim() };
-            });
-            console.log(newData,"hhhhhh");
+            // const splittedData = data.message.split(',');
+            // const newData = splittedData.map((item) => {
+            //     return { value: item.trim() };
+            // });
+            // console.log(newData,"hhhhhh");
             // setSpreadsheetData((prevData) => [...prevData, newData]);
             setSpreadsheetData(data.message);
-            console.log(spreadsheetData);
+            // console.log(spreadsheetData);
             
         });
 
@@ -81,25 +84,27 @@ const SheetPage = () => {
         
         // Set a new typing timeout
         typingTimeoutRef.current = setTimeout(() => {
+          
+            // socket.emit('send_message', { message: out });
             dispatch({ type: 'SEND_MESSAGE', payload: newMessage });
             typingTimeoutRef.current = null;
-            setSpreadsheetData(newMessage);
-            console.log(spreadsheetData , "ahmad");
-            // axios.put('http://localhost:5000/documents/1',{
-            //     id : 1,
-            //     document_content: newMessage
-            // })
-            // .then(response => {
+            // setSpreadsheetData(newMessage);
+            // console.log(spreadsheetData , "ahmad");
+            axios.put(`http://172.23.194.171:5000/documents/${id}`,{
+                id : id,
+                document_content: JSON.stringify(newMessage)
+            })
+            .then(response => {
 
-            //     console.log("succesfully updated", response);
-            //     // alert("Document updated successfully");
+                console.log("succesfully updated", response);
+                // alert("Document updated successfully");
                 
-            //     // setLoading(false);
-            // })
-            // .catch(error => {
-            //    console.log(error);
+                // setLoading(false);
+            })
+            .catch(error => {
+               console.log(error);
               
-            // });
+            });
 
         }, 300); // 300ms timeout
     };
@@ -107,7 +112,7 @@ const SheetPage = () => {
 
     // useEffect(() => {
     //     id = localStorage.getItem('id');
-    //     axios.get(`http://localhost:5000/documents/${id}/users`)
+    //     axios.get(`http://172.23.194.171:5000/documents/${id}/users`)
     // },[]);
 // const spreadsheetData = 
 // ];

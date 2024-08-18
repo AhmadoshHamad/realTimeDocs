@@ -8,7 +8,7 @@ import axios from 'axios';
 import {useLocation} from 'react-router-dom';
 // import  {Alert}  from "flowbite-react";
 import DashboardNavbar from '../components/DashboardNavbar';
-import Sheetcard from '../components/Sheetcard';
+import SheetCard from '../components/SheetCard';
 
 
 const SheetDashboardPage = () => {
@@ -17,7 +17,7 @@ const SheetDashboardPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const id = localStorage.getItem('id');
-      const response = await axios.get(`http://localhost:5000/users/${id}/documents`);
+      const response = await axios.get(`http://172.23.194.171:5000/users/${id}/documents`);
       console.log(response.data);
       setDocuments(response.data);
     };
@@ -34,20 +34,23 @@ const SheetDashboardPage = () => {
     
 <DashboardNavbar  Isdocs={false} ></DashboardNavbar>
 
-    <div className="w-full flex bg-slate-300 justify-center ">
+    <div className="w-full flex bg-[#f1f3f4] justify-center ">
       <div className="mt-8 px-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 place-items-center " style={{maxWidth: '1000px'}}>
         <AddCard Isdocs={false} />
       </div>
     </div>
 
-    <div className="w-full flex  justify-center ">
+    <div className="w-full flex  justify-center  ">
 
       <div className="mt-8 px-16 w-4/5 flex flex-col gap-6  " style={{maxWidth: '1000px'}}>
-          
+          <div className="flex justify-between ps-6 pe-10">
+            <span className='text-xl font-bold'>Sheet Name</span>
+            <span className='text-xl font-bold'>Last modified</span>
+          </div>
           {/* {documents.map((document) => {
             return <Sheetcard key={document.id} document={document} />;
           })} */}
-          <Sheetcard />
+          <SheetCard />
          
           
 

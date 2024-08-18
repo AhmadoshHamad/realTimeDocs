@@ -14,7 +14,7 @@ import DashboardPage from './pages/DashboardPage';
 //   )
 // );
   
-const socket = io('http://localhost:5000');
+const socket = io('http://172.23.194.171:5000');
 
 export default function App() {
 

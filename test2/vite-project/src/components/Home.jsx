@@ -49,7 +49,7 @@ const Home = () => {
                               
                               <div className="flex justify-center items-center gap-x-4  w-full mt-4 max-[400px]:hidden">
                                     <a href='/login' className="bg-black rounded-lg px-5 py-2  text-white hover-transparent-and-black">Get started</a>
-                                    <a href='/playground' className="bg-black  text-white rounded-lg px-5 py-2 hover-transparent-and-black" style={{ fontFamily: 'Roboto' }}>Request demo</a>
+                                    <a href='/playground' className="bg-transparent border border-black  rounded-lg px-5 py-2 " style={{ fontFamily: 'Roboto' }}>Request demo</a>
                               </div>
                       </div>
                       <div className="hidden sm:flex sm:col-span-4 md:col-span-6  mx-auto  items-center">
@@ -64,7 +64,7 @@ const Home = () => {
         <section className="mt-2 px-4 bg-white pb-6 rounded-3xl">
             <div className="grid lg:grid-cols-4  sm:grid-cols-2 grid-cols-1  px-3 gap-4 ">
 
-            <div className="col-span-1 bg-indigo-400 p-2 px-4 pb-4 rounded-3xl">
+            <div className="col-span-1 bg-[#a8afff] p-2 px-4 pb-4 rounded-3xl">
                     <div className="card grid grid-rows-2">
                         <div className="row-span-1"></div>
                         <div className="row-span-1 grid grid-cols-2  ">
@@ -84,7 +84,7 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-span-1 bg-indigo-400 p-2 px-4 pb-4 rounded-3xl">
+                <div className="col-span-1 bg-[#a8afff] p-2 px-4 pb-4 rounded-3xl">
                     <div className="card grid grid-rows-2">
                         <div className="row-span-1"></div>
                         <div className="row-span-1 grid grid-cols-2 ">
@@ -98,15 +98,15 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-span-1 bg-indigo-400 p-2 px-4 pb-4 rounded-3xl">
+                <div className="col-span-1 bg-[#a8afff] p-2 px-4 pb-4 rounded-3xl">
                     <div className="card grid grid-rows-2">
                         <div className="row-span-1"></div>
                         <div className="row-span-1 grid grid-cols-2 ">
                             <div className="col-span-1 ms-4">
                                 <span className=" block text-nowrap">Words written</span>
-                                <span className="font-bold text-4xl ">6M+</span>
+                                <span className="font-bold text-4xl ">6G+</span>
                             </div>
-                            <div className="col-span-1  grid place-items-center">
+                            <div className="col-span-1  grid place-items-center justify-end me-4">
                             <svg xmlns="http://www.w3.org/2000/svg" height="75px" viewBox="0 -960 960 960" width="75px" fill="#6875f5"><path d="M380-337 160-557l43-42 177 177 378-378 42 43-420 420ZM200-160v-60h560v60H200Z"/></svg>
                             </div>
                         </div>

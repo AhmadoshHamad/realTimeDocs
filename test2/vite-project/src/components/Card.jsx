@@ -6,7 +6,7 @@ const Card = ({document}) => {
 return (
     <a href={`/editor/${document.id}`} className="max-w-xs rounded overflow-hidden shadow-lg bg-white hover:outline hover:outline-1">
         <div style={{width: '500px', height: '150px', overflow: 'hidden'}}>
-            <iframe className='h-96' src={`http://localhost:5173/editor/${document.id}`} style={{width: '100%', transform: 'scale(0.4)', transformOrigin: '0px 0px'}}></iframe>
+            <iframe className='h-96' src={`http://192.168.1.117:5173/editor/${document.id}`} style={{width: '100%', transform: 'scale(0.4)', transformOrigin: '0px 0px'}}></iframe>
         </div>
         <div className="px-6 py-4 border-t-2">
             <div className="font-bold text-xl mb-2">{document.name}</div>

@@ -14,7 +14,7 @@ const DocsDashboardPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const id = localStorage.getItem('id');
-      const response = await axios.get(`http://localhost:5000/users/${id}/documents`);
+      const response = await axios.get(`http://172.23.194.171:5000/users/${id}/documents`);
       console.log(response.data);
       setDocuments(response.data);
     };
