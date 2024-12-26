@@ -15,7 +15,7 @@ const AddCard = ({Isdocs}) => {
         event.preventDefault(); // Prevent default form submission
         try{
             const id = localStorage.getItem('id');
-            const response = await axios.post(`http://172.23.194.171:5000/documents/${id}`, {
+            const response = await axios.post(`http://127.0.0.1:5001/documents/${id}`, {
                 name: name
             });
             console.log(response.data);

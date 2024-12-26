@@ -9,7 +9,7 @@ import axios from 'axios';
 import { Spreadsheet } from 'react-spreadsheet';
 import { useParams,useLoaderData } from 'react-router-dom';
 
-const socket = io('http://172.23.194.171:5000');
+const socket = io('http://127.0.0.1:5001');
 
 const SheetPage = () => {
     const dispatch = useDispatch();
@@ -24,7 +24,7 @@ const SheetPage = () => {
     
  
     useEffect(() => {
-        axios.get(`http://172.23.194.171:5000/documents/${id}`)
+        axios.get(`http://127.0.0.1:5001/documents/${id}`)
             .then(response => {
                 let dataString = response.data.document_content;
     
@@ -90,7 +90,7 @@ const SheetPage = () => {
             typingTimeoutRef.current = null;
             // setSpreadsheetData(newMessage);
             // console.log(spreadsheetData , "ahmad");
-            axios.put(`http://172.23.194.171:5000/documents/${id}`,{
+            axios.put(`http://127.0.0.1:5001/documents/${id}`,{
                 id : id,
                 document_content: JSON.stringify(newMessage)
             })
@@ -112,7 +112,7 @@ const SheetPage = () => {
 
     // useEffect(() => {
     //     id = localStorage.getItem('id');
-    //     axios.get(`http://172.23.194.171:5000/documents/${id}/users`)
+    //     axios.get(`http://127.0.0.1:5001/documents/${id}/users`)
     // },[]);
 // const spreadsheetData = 
 // ];

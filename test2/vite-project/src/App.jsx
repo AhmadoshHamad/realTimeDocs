@@ -30,7 +30,7 @@ const router = createBrowserRouter(
   ]
 );
   
-const socket = io('http://172.23.194.171:5000');
+const socket = io('http://127.0.0.1:5001');
 
 export default function App() {
   return (

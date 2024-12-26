@@ -2,7 +2,7 @@
 import { takeLatest, put,all } from 'redux-saga/effects';
 import { setMessage, addMessage } from '../actions';
 import io from 'socket.io-client';
-const socket = io('http://172.23.194.171:5000');
+const socket = io('http://127.0.0.1:5001');
 // Worker Saga: Fired on SEND_MESSAGE action
 function* sendMessageSaga(action) {
   try {

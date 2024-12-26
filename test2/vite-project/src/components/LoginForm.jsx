@@ -26,7 +26,7 @@ const Login = () => {
         event.preventDefault(); // Prevent default form submission
 
         try {
-            const response = await axios.post('http://172.23.194.171:5000/login', {
+            const response = await axios.post('http://127.0.0.1:5001/login', {
                 email: email,
                 password: password
             });
@@ -52,7 +52,7 @@ const Login = () => {
         event.preventDefault(); // Prevent default form submission
 
         try {
-            const response = await axios.post('http://172.23.194.171:5000/register', {
+            const response = await axios.post('http://127.0.0.1:5001/register', {
                 username : username,
                 email: email,
                 password: password

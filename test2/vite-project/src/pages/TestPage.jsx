@@ -8,7 +8,7 @@ const TestPage = () => {
 
 
 
-<iframe src="http://172.23.194.171:5173/playground"  height="200" width="300" title="Iframe Example"></iframe>
+<iframe src="http://127.0.0.1:5173/playground"  height="200" width="300" title="Iframe Example"></iframe>
 <div style={{width: '200px' ,overflow: 'hidden'}}>
     <iframe src="https://example.com" style={{width: '1000px', height: '1000px', transform: scale(0.2), transformOrigin: '0px 0px'}}></iframe>
 </div>
