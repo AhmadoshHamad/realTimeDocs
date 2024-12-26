@@ -339,5 +339,20 @@ def get_sheet(id):
 
 
 if __name__ == '__main__':
-    # eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 5000)), app)
-    socketio.run(app, host='172.23.194.171', port=5000)
+    # eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 5001)), app)
+    socketio.run(app, host='0.0.0.0', port=5001,debug=True)
+
+# from flask import Flask, jsonify, request
+
+# app = Flask(__name__)
+
+# @app.route('/')
+# def home():
+#     return 'Hello, Flask!'
+
+# @app.route('/api/hello', methods=['GET'])
+# def api_hello():
+#     return jsonify(message='Hello, API!')
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
