@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Editor } from '@tinymce/tinymce-react';
 import SideBar from '../components/SideBar';
 import { setMessage } from '../actions';
 import io from 'socket.io-client';

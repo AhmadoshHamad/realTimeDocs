@@ -3,7 +3,7 @@ import Card from '../components/Card';
 import AddCard from '../components/AddCard';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import folder from '../assets/images/folder.png';
-// import { Editor } from '@tinymce/tinymce-react';
+// import { Editor } from '';
 import axios from 'axios';
 import {useLocation} from 'react-router-dom';
 // import  {Alert}  from "flowbite-react";
