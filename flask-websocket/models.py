@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from uuid import uuid4
 from datetime import datetime # Add this line to import datetime module
-
+# from app import db
 
 db = SQLAlchemy()
 

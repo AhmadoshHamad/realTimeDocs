@@ -8,14 +8,16 @@ from datetime import datetime # Add this line to import datetime module
 
 from flask_cors  import CORS, cross_origin
 from models import * 
+# from models import db
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-CORS(app,supports_credentials=True)
 
+# db = SQLAlchemy(app)
+db.init_app(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
 with app.app_context():
     # // delete db
