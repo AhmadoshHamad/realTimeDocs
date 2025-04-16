@@ -12,9 +12,10 @@ import DocsEditorPage from './pages/DocsEditorPage';
 import { Provider } from 'react-redux';
 import store from './store'; // Adjust the path if necessary
 import SheetPage from './pages/SheetPage';
-import TestPage from './pages/TestPage';
+// import TestPage from './pages/TestPage';
 import Playground from './pages/Playground';
 
+// const 
 
 
 const router = createBrowserRouter(
@@ -25,7 +26,7 @@ const router = createBrowserRouter(
     { path: "/sheets", element: <SheetDashboardPage /> },
     { path: "/editor/:id", element: <DocsEditorPage /> },
     { path: "/sheetEditor/:id", element: <SheetPage /> },
-    { path: "/test", element: <TestPage /> },
+    // { path: "/test", element: <TestPage /> },
     { path: "/playground", element: <Playground /> },
   ]
 );
