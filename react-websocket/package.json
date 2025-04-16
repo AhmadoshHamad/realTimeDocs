@@ -20,6 +20,7 @@
     "axios": "^1.8.4",
     "bootstrap-icons": "^1.11.3",
     "daisyui": "^4.12.10",
+    "dotenv": "^16.5.0",
     "flowbite": "^2.5.1",
     "flowbite-react": "^0.10.1",
     "postcss": "^8.4.41",

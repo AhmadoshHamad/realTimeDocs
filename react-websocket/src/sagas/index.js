@@ -1,8 +1,11 @@
 // sagas/index.js
 import { takeLatest, put,all } from 'redux-saga/effects';
 import { setMessage, addMessage } from '../actions';
+
 import io from 'socket.io-client';
-const socket = io('http://127.0.0.1:5001');
+
+const socketURL = import.meta.env.VITE_SOCKET_URL + ":" + import.meta.env.VITE_SOCKET_PORT;
+const socket = io(`${socketURL}`);
 // Worker Saga: Fired on SEND_MESSAGE action
 function* sendMessageSaga(action) {
   try {

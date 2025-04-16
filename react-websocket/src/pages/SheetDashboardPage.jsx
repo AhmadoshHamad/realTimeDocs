@@ -9,13 +9,15 @@ import {useLocation} from 'react-router-dom';
 import DashboardNavbar from '../components/DashboardNavbar';
 import SheetCard from "../components/Sheetcard";
 
+const socketURL = import.meta.env.VITE_SOCKET_URL + ":" + import.meta.env.VITE_SOCKET_PORT;
+
 const SheetDashboardPage = () => {
   const [documents, setDocuments] = useState([]);
   const [success, setSuccess] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const id = localStorage.getItem('id');
-      const response = await axios.get(`http://127.0.0.1:5001/users/${id}/documents`);
+      const response = await axios.get(`${socketURL}/users/${id}/documents`);
       console.log(response.data);
       setDocuments(response.data);
     };

@@ -8,7 +8,9 @@ import axios from 'axios';
 import { Spreadsheet } from 'react-spreadsheet';
 import { useParams,useLoaderData } from 'react-router-dom';
 
-const socket = io('http://127.0.0.1:5001');
+const socketURL = import.meta.env.VITE_SOCKET_URL + ":" + import.meta.env.VITE_SOCKET_PORT;
+const socket = io(socketURL);
+
 
 const DocsEditorPage = () => {
     const dispatch = useDispatch();
@@ -21,7 +23,7 @@ const DocsEditorPage = () => {
 
     useEffect(() => {
         // Replace with your API endpoint
-        axios.get(`http://127.0.0.1:5001/documents/${id}`)
+        axios.get(`${socketURL}/documents/${id}`)
             .then(response => {
                 setData(response.data);
                 setMessage(response.data.document_content);
@@ -65,7 +67,7 @@ const DocsEditorPage = () => {
             dispatch({ type: 'SEND_MESSAGE', payload: newMessage });
             typingTimeoutRef.current = null;
 
-            axios.put(`http://127.0.0.1:5001/documents/${id}`,{
+            axios.put(`${socketURL}/documents/${id}`,{
                 id : id,
                 document_content: newMessage
             })
@@ -97,7 +99,7 @@ const DocsEditorPage = () => {
 };
 
 // const documentLoader = async ({params, setData, setMessage}) => {
-//     const response = await fetch(`http://127.0.0.1:5001/documents/${params.id}`);
+//     const response = await fetch(`${socketURL}/documents/${params.id}`);
 //     const data = await response.json();
 //     setData(response.data);
 //     setMessage(data.document_content);

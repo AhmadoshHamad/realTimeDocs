@@ -15,7 +15,7 @@ import SheetPage from './pages/SheetPage';
 // import TestPage from './pages/TestPage';
 import Playground from './pages/Playground';
 
-// const 
+const socketURL = import.meta.env.VITE_SOCKET_URL + ":" + import.meta.env.VITE_SOCKET_PORT;
 
 
 const router = createBrowserRouter(
@@ -31,7 +31,7 @@ const router = createBrowserRouter(
   ]
 );
   
-const socket = io('http://127.0.0.1:5001');
+const socket = io(socketURL);
 
 export default function App() {
   return (

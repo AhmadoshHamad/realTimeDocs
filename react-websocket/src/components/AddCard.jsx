@@ -2,6 +2,10 @@ import React, {useState} from 'react'
 import ReactCardFlip from 'react-card-flip'
 import loginImage from '../assets/images/folder.png';
 import axios from 'axios';
+
+
+const socketURL = import.meta.env.VITE_SOCKET_URL + ":" + import.meta.env.VITE_SOCKET_PORT;
+
 const AddCard = ({Isdocs}) => {
     const [isFlipped,SetIsFlipped] = useState(false);
     const [name,setName] = useState('');
@@ -15,7 +19,7 @@ const AddCard = ({Isdocs}) => {
         event.preventDefault(); // Prevent default form submission
         try{
             const id = localStorage.getItem('id');
-            const response = await axios.post(`http://127.0.0.1:5001/documents/${id}`, {
+            const response = await axios.post(`${socketURL}/documents/${id}`, {
                 name: name
             });
             console.log(response.data);

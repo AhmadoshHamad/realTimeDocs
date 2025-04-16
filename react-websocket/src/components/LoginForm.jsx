@@ -7,7 +7,7 @@ import '../cssFiles/buttonsCss.css';
 import ReactCardFlip from 'react-card-flip'
 
 
-
+const socketURL = import.meta.env.VITE_SOCKET_URL + ":" + import.meta.env.VITE_SOCKET_PORT;
 
 const Login = () => {
 
@@ -26,7 +26,7 @@ const Login = () => {
         event.preventDefault(); // Prevent default form submission
 
         try {
-            const response = await axios.post('http://127.0.0.1:5001/login', {
+            const response = await axios.post(`${socketURL}/login`, {
                 email: email,
                 password: password
             });
@@ -52,7 +52,7 @@ const Login = () => {
         event.preventDefault(); // Prevent default form submission
 
         try {
-            const response = await axios.post('http://127.0.0.1:5001/register', {
+            const response = await axios.post(`${socketURL}/register`, {
                 username : username,
                 email: email,
                 password: password
