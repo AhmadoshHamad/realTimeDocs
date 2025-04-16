@@ -7,8 +7,7 @@ import axios from 'axios';
 import {useLocation} from 'react-router-dom';
 // import  {Alert}  from "flowbite-react";
 import DashboardNavbar from '../components/DashboardNavbar';
-import SheetCard from '../components/SheetCard';
-
+import SheetCard from "../components/Sheetcard";
 
 const SheetDashboardPage = () => {
   const [documents, setDocuments] = useState([]);
