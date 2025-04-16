@@ -1,33 +1,40 @@
 name: Build and Deploy Vite React App
 
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                node-version: 18
 
-      - name: Install Dependencies
-        run: npm install
+            - name: Navigate to react-websocket and Install Dependencies
+              run: |
+                cd react-websocket
+                npm install
 
-      - name: Build Vite React App
-        run: npm run build
+            - name: Build Vite React App
+              run: |
+                    cd react-websocket
+                    npm run build
 
-      - name: Verify Build Directory
-        run: ls -la dist
+            - name: Verify Build Directory
+              run: |
+                    cd react-websocket
+                    ls -la dist
 
-      - name: Deploy via SCP and SSH
-        run: |
-            sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "rm -rf domains/linen-stingray-263248.hostingersite.com/public_html/*"
-            sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} -r dist/* ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:domains/linen-stingray-263248.hostingersite.com/public_html/
+            - name: Deploy via SCP and SSH
+              run: |
+                    cd react-websocket
+                    sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "rm -rf domains/linen-stingray-263248.hostingersite.com/public_html/*"
+                    sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} -r dist/* ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:domains/linen-stingray-263248.hostingersite.com/public_html/
