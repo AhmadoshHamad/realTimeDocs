@@ -1,0 +1,28 @@
+POST http://localhost:5001/login
+Content-Type: application/json
+
+{
+    "email" : "jj@gmail.com",
+    "password" : "ahmadosh"
+}
+
+
+### 
+
+GET http://localhost:5001/
+
+###
+POST  http://localhost:5001/register
+Content-Type: application/json
+
+{
+    "username" : "jj",
+    "email" : "jj@gmail.com",
+    "password" : "ahmadosh"
+}
+
+
+###
+
+GET http://localhost:5001/users/me/documents
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjcsInJvbGUiOiJ0byBiZSBjb250aW51ZWQiLCJleHAiOjE3NDcwODg5ODV9.AwTsdceoKWaF6cOT-sSOxCUzAJ1LQksvSYRmLLonkIs

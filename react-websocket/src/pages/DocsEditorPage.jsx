@@ -7,10 +7,11 @@ import '../cssFiles/editor.css';
 import axios from 'axios';
 import { Spreadsheet } from 'react-spreadsheet';
 import { useParams,useLoaderData } from 'react-router-dom';
+import DocsEditor from '../components/DocsEditor';
 
 const socketURL = import.meta.env.VITE_SOCKET_URL + ":" + import.meta.env.VITE_SOCKET_PORT;
 const socket = io(socketURL);
-
+const token = localStorage.getItem('token')
 
 const DocsEditorPage = () => {
     const dispatch = useDispatch();
@@ -23,12 +24,15 @@ const DocsEditorPage = () => {
 
     useEffect(() => {
         // Replace with your API endpoint
-        axios.get(`${socketURL}/documents/${id}`)
+        axios.get(`${socketURL}/documents/${id}`,{
+            headers :{
+                Authorization : `Bearer ${token}`
+            }
+        })
             .then(response => {
                 setData(response.data);
-                setMessage(response.data.document_content);
+                dispatch(setMessage(response.data.document_content));
                 console.log(response.data.document_content);
-                
                 // setLoading(false);
             })
             .catch(error => {
@@ -86,13 +90,12 @@ const DocsEditorPage = () => {
         }, 300); // 300ms timeout
     };
 
-
-
     return (
         <>
             <SideBar isDocs={true} />
             <div className="extended" >
-                <textarea className='w-full ml-10' name="" id="" onChange={(e) => handleChange(e.target.value)} value={message}></textarea>
+                <DocsEditor value={message} onChange={handleChange} />
+                {/* <textarea className='w-full ml-10 h-screen' name="" id="" onChange={(e) => handleChange(e.target.value)} value={message}></textarea> */}
             </div>
         </>
     );

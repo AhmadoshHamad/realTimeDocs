@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import folder from '../assets/images/folder.png'
-import Logo from '../assets/images/logo.png'
+// import Logo from '../assets/images/logo.png'
 import Navbar from './Navbar'
 const Home = () => {
     // useState[navelement, setNavelement] = useState(false)
@@ -48,8 +48,8 @@ const Home = () => {
                               <span className="text-3xl font-bold text-center px-8 max-[400px]:hidden">work with your mates on a real time file editor</span>
                               
                               <div className="flex justify-center items-center gap-x-4  w-full mt-4 max-[400px]:hidden">
-                                    <a href='/login' className="bg-black rounded-lg px-5 py-2  text-white hover-transparent-and-black">Get started</a>
-                                    <a href='/playground' className="bg-transparent border border-black  rounded-lg px-5 py-2 " style={{ fontFamily: 'Roboto' }}>Request demo</a>
+                                    <a href='/login' className="bg-black rounded-lg px-5 py-2  text-white hover-transparent-and-black duration-700">Get started</a>
+                                    <a href='/playground' className="bg-transparent border border-black  rounded-lg px-5 py-2 hover:bg-black hover:text-white duration-500" style={{ fontFamily: 'Roboto' }}>Try it now !</a>
                               </div>
                       </div>
                       <div className="hidden sm:flex sm:col-span-4 md:col-span-6  mx-auto  items-center">

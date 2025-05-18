@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import socketIOClient from 'socket.io-client';
+import React from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import io from 'socket.io-client';
 
-import { Route,createBrowserRouter,createRoutesFromElements, RouterProvider, Router} from 'react-router-dom'
+import store from './store';
+import 'flowbite';
+
 import LoginPage from './pages/LoginPage';
 import DocsDashboardPage from './pages/DocsDashboardPage';
 import SheetDashboardPage from './pages/SheetDashboardPage';
 import HomePage from './pages/HomePage';
 import DocsEditorPage from './pages/DocsEditorPage';
-
-import { Provider } from 'react-redux';
-import store from './store'; // Adjust the path if necessary
 import SheetPage from './pages/SheetPage';
-// import TestPage from './pages/TestPage';
 import Playground from './pages/Playground';
-
+import NotFoundPage from './pages/NotFoundPage.jsx';
+import ForbiddenPage from './pages/ForbiddenPage.jsx';
+import UnauthorizedPage from './pages/UnauthorizedPage.jsx';
 const socketURL = import.meta.env.VITE_SOCKET_URL + ":" + import.meta.env.VITE_SOCKET_PORT;
 
 
@@ -26,6 +27,9 @@ const router = createBrowserRouter(
     { path: "/sheets", element: <SheetDashboardPage /> },
     { path: "/editor/:id", element: <DocsEditorPage /> },
     { path: "/sheetEditor/:id", element: <SheetPage /> },
+    { path: "/404", element: <NotFoundPage /> },
+    { path: "/403", element: <ForbiddenPage /> },
+    { path: "/401", element: <UnauthorizedPage /> },
     // { path: "/test", element: <TestPage /> },
     { path: "/playground", element: <Playground /> },
   ]

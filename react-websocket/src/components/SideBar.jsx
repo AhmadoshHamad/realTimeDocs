@@ -14,54 +14,42 @@ const SideBar = ({isDocs}) => {
     // const [isArrowRotated, setIsArrowRotated] = useState(false);
     // const [isSidebarHidden, setIsSidebarHidden] = useState(false);
     const [documents, setDocuments] = useState([]);
-    // const [id, setId] = useState(1);
      
     const navigate = useNavigate();
-    const id = localStorage.getItem('id'); 
+    const token = localStorage.getItem('token'); 
+
     useEffect(() => {
-      const fetchData = async () => {
-        const id = localStorage.getItem('id');
-        const response = await axios.get(`${socketURL}/users/${id}/documents`);
-        console.log(response.data);
+      const fetchDocuments = async () => {
+      if (!token) {
+        alert("No token found!");
+        navigate('/login'); // Redirect to login page
+        return;
+      }
+    
+      try {
+        const response = await axios.get(`${socketURL}/users/me/documents`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+        });
+        // console.log(response.data);
         setDocuments(response.data);
+        console.log(documents);
+        
+      } catch (error) {
+        console.error("Error fetching documents:", error.response || error.message);
+        alert("Failed to fetch documents. Please check the console for details.");
+      }
       };
     
-      fetchData();
-    }, []);
-
-    // useEffect(() => {
-    //   const fetchDocuments = async () => {
-    //     const id = localStorage.getItem('id'); // Hardcoded ID
+      fetchDocuments();
+    }, [navigate, token]);
   
-    //     // Check if ID is correctly set
-    //     if (typeof id === 'undefined' || id === null) {
-    //       alert("No ID found!");
-    //       navigate('/login'); // Redirect to login page
-    //       return;
-    //     }
-  
-    //     try {
-    //       const response = await axios.get(`${socketURL}/users/${id}/documents`);
-    //       console.log(response.data);
-    //       setDocuments(response.data);
-    //     } catch (error) {
-    //       console.error("Error fetching documents:", error.response || error.message);
-    //       alert("Failed to fetch documents. Please check the console for details.");
-    //     }
-    //   };
-  
-    //   fetchDocuments();
-    // }, [navigate]);
-    
-    const createDoc= () =>{
-      console.log("hello");
-      
-    }
 
 
 
     function logout(){
-      localStorage.removeItem('id');
+      localStorage.removeItem('token');
       window.location.href = '/login';
     }
 
@@ -130,10 +118,10 @@ return (
       className="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold"
       id="submenu"
     >
-      {(documents.length === 0 || isDocs) ? (
+      {(documents.length === 0) ? (
         <p>No documents available.</p>
       ) : (
-        documents.map((doc) => (
+        documents.slice(0,4).map((doc) => (
           <a
             key={doc.id} // Ensure each item has a unique key
             className="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1 block"

@@ -1,31 +1,36 @@
-from flask import Flask, request, jsonify,g,Blueprint # type: ignore
-from flask_socketio import SocketIO, send, emit # type: ignore
-from flask_sqlalchemy import SQLAlchemy # type: ignore
-from datetime import datetime # Add this line to import datetime module
-# from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
-# from flask_bcrypt import Bcrypt # type: ignore
-# from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity # type: ignore
+from functools import wraps
+from flask import Flask, request, jsonify, g, Blueprint, make_response  
+from flask_socketio import SocketIO, send, emit 
+from flask_sqlalchemy import SQLAlchemy 
+# Change this line at the top of your file
+from datetime import datetime, timedelta
+from werkzeug.security import generate_password_hash, check_password_hash 
+# from flask_bcrypt import Bcrypt 
+# from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity 
 
 from flask_cors  import CORS, cross_origin
 from models import * 
-# from models import db
+from dotenv import load_dotenv
+import os
+import jwt
+# from jwt import encode, decode, exceptions
 
 app = Flask(__name__)
+
 socketio = SocketIO(app, cors_allowed_origins="*")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+load_dotenv()  # Load environment variables from .env file
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['APP_SECRET_KEY'] = os.getenv("APP_SECRET_KEY")
 
 # db = SQLAlchemy(app)
 db.init_app(app)
-CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
+CORS(app, supports_credentials=True, origins=["http://localhost:3000","https://linen-stingray-263248.hostingersite.com"])
 
 with app.app_context():
-    # // delete db
-    # db.drop_all()  # Drop all tables
+  
     db.create_all()  # Create all tables
-    # user_doc = UserDoc(user_id=1, doc_id=3)
-    # db.session.add(user_doc)
-    # db.session.commit()
+  
 
 # When a client connects
 @socketio.on('connect')
@@ -39,65 +44,94 @@ def handle_disconnect():
 
 # When a message is received from a client
 @socketio.on('send_message')
-def handle_message(data):
+def handle_message(auth_header):
     # Broadcast the message to all clients except the sender
-    print(f"Received message: {data['message']}")
-    socketio.emit('receive_message', data, skip_sid=request.sid)
+    print(f"Received message: {auth_header['message']}")
+    socketio.emit('receive_message', auth_header, skip_sid=request.sid)
+    
+@app.route('/')
+def home():
+    return 'Hello, Flask!'
 
 # Login-Register-User endpoint
+
 
 
 # Registration endpoint
 @app.route('/register', methods=['POST'])
 def register():
-    data = request.get_json()
+    auth_header = request.get_json()
 
-    username = data.get('username')
-    email = data.get('email')
-    password = data.get('password')
+    username = auth_header.get('username')
+    email = auth_header.get('email')
+    password = auth_header.get('password')
 
     if not username or not password or not email:
         return jsonify({"message": "all fields are required"}), 400
 
-    hashed_password = password
-    new_user = User(username=username,email=email ,password=hashed_password)
-
+    hashed_password = generate_password_hash(password)
+    new_user = User(username=username, email=email, password=hashed_password)
     try:
         db.session.add(new_user)
         db.session.commit()
-        return jsonify({"message": "User created successfully", "user_id": new_user.id,'username':username,'email':email}), 201
+        # Get the user ID after committing
+        user_id = new_user.id
+        token = jwt.encode({"userId": user_id, "role": "to be cont", "exp": datetime.utcnow() + timedelta(minutes=30)},
+                           app.config['APP_SECRET_KEY'])
+        return jsonify({"token": token,
+                        "message": "User created successfully"}), 201
     except Exception as e:
         return jsonify({"message": str(e)}), 500
 
 # Login endpoint
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    # username = data.get('username')
-    email = data.get('email')
-    password = data.get('password')
+    auth_header = request.get_json()
+    # username = auth_header.get('username')
+    email = auth_header.get('email')
+    password = auth_header.get('password')
 
     if not email or not password:
         return jsonify({"message": "email and password are required"}), 400
 
     user = User.query.filter_by(email=email).first()
 
-    if not user or  (user.password != password):
+    if not user or  not check_password_hash(user.password,password):
         return jsonify({"message": "Invalid credentials"}), 401
 
-    return jsonify({"message": "Login successful", "user_id": user.id,"username" : user.username,"email":email}), 200
+    token = jwt.encode({
+        "userId" : user.id,"role" : "to be continued",         "exp": datetime.utcnow() + timedelta(minutes=30) },
+            key=app.config["APP_SECRET_KEY"])
+   
+    return jsonify({"token" : token}), 200
+
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args,**kwargs):
+        auth_header = request.headers.get('Authorization')
     
-# @app.route('/protected', methods=['GET'])
-# @jwt_required()
-# def protected():
-#     current_user = get_jwt_identity()
-#     return jsonify(logged_in_as=current_user), 200
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return jsonify("Missing or invalid authorization header"), 401
+        try:
+            token = auth_header.split(' ')[1]
+            payload = jwt.decode(token,app.config["APP_SECRET_KEY"], algorithms=['HS256'])
+            user = User.query.filter_by(id = payload['userId']).first()
+        except jwt.ExpiredSignatureError:
+            return jsonify("Token Expired"), 401
+        except jwt.InvalidTokenError:
+            return jsonify("Not valid Token"), 401
+        except Exception as e:
+            return jsonify(f"Error {str(e)}"), 500
+        return f(user,*args,**kwargs)
+    return decorated
 
-# documents apis
 
 
-@app.route('/documents/<int:id>', methods=['POST'])
-def create_document(id):
+
+@app.route('/documents', methods=['POST'])
+@token_required
+def create_document(user):
     data = request.json
     doc_name = data['name']
     updated_at = datetime.utcnow()
@@ -105,29 +139,49 @@ def create_document(id):
     db.session.add(new_document)
     db.session.commit()
     # link the document to the user
-    user_doc = UserDoc(user_id=id, doc_id=new_document.id)
+    user_doc = UserDoc(user_id=user.id, doc_id=new_document.id)
     db.session.add(user_doc)
     db.session.commit()
-    return jsonify({'id': new_document.id}), 201
+    return jsonify({'doc_id': new_document.id}), 201
 
 # Get all documents (READ)
-@app.route('/documents', methods=['GET'])
-def get_documents():
-    documents = Document.query.all()
-    return jsonify([{'id': doc.id, 'document_content': doc.document_content} for doc in documents]), 200
+@app.route('/users/me/documents', methods=['GET'])
+@token_required
+def get_documents(user):
+    documents = db.session.query(Document).join(UserDoc, Document.id == UserDoc.doc_id).filter(UserDoc.user_id == user.id).all()
+    return jsonify([
+        {
+            'id': doc.id,
+            'name': doc.name,
+        } for doc in documents
+    ]), 200
 
 # Get a specific document by ID (READ)
-@app.route('/documents/<int:id>', methods=['GET'])
-def get_document(id):
-    document = Document.query.get_or_404(id)
-    return jsonify({'id': document.id, 'document_content': document.document_content,'updated_at' : document.updated_at}), 200
+@app.route('/documents/<int:doc_id>', methods=['GET'])
+@token_required
+def get_document(user, doc_id):
+    # Check if the document belongs to the user
+    user_doc = UserDoc.query.filter_by(user_id=user.id, doc_id=doc_id).first()
+    if not user_doc:
+        return jsonify({'error': 'access denied'}), 403
+
+    document = Document.query.get_or_404(doc_id)
+    return jsonify({
+        'id': document.id,
+        'document_content': document.document_content,
+        'updated_at': document.updated_at
+    }), 200
 
 # Update a document (UPDATE)
 @app.route('/documents/<int:id>', methods=['PUT'])
-def update_document(id):
-    document = Document.query.get_or_404(id)
-    data = request.json
-    document.document_content = data['document_content']
+@token_required
+def update_document(user,id):
+    document = db.session.query(Document).join(UserDoc, UserDoc.doc_id == Document.id).filter(UserDoc.user_id == user.id).first()
+    if not document:
+        return jsonify ({"message" : "Forbidden"}) , 403  
+    
+    auth_header = request.json
+    document.document_content = auth_header['document_content']
     document.updated_at = datetime.utcnow()
     db.session.commit()
     return jsonify({'id': document.id, 'document_content': document.document_content}), 200
@@ -145,10 +199,10 @@ def delete_document(id):
 
 # Create a new userDoc association
 @app.route('/user_docs', methods=['POST'])
-def create_user_doc():
-    data = request.json
-    user_id = data.get('user_id')
-    doc_id = data.get('doc_id')
+def create_user_doc(user):
+    auth_header = request.json
+    user_id = auth_header.get('user_id')
+    doc_id = auth_header.get('doc_id')
 
     # Validate user and document existence
     if not User.query.get(user_id):
@@ -162,13 +216,16 @@ def create_user_doc():
 
     return jsonify({'user_id': user_doc.user_id, 'doc_id': user_doc.doc_id}), 201
 
-@app.route('/users/<int:user_id>/documents', methods=['GET'])
-def get_documents_by_user(user_id):
+@app.route('/documents', methods=['GET'])
+@token_required
+def get_documents_by_user(user):
+    print(user)
+    print(f"user id is {user.id} !!!!!!!!!!!!11")
     # Fetch all user-doc associations for the given user
-    user_docs = UserDoc.query.filter_by(user_id=user_id).all()
+    user_docs = UserDoc.query.filter_by(user_id=user.id).all()
 
     if not user_docs:
-        return jsonify({'error': 'No documents found for this user'}), 404
+        return jsonify({'error': 'User has no associated documents'}), 404
 
     # Extract document IDs from user-doc associations
     doc_ids = [user_doc.doc_id for user_doc in user_docs]
@@ -191,16 +248,16 @@ def get_collaborators(doc_id):
 # POST API to create a new Cell
 @app.route('/cells', methods=['POST'])
 def create_cell():
-    data = request.json
+    auth_header = request.json
     
-    if not data or not all(k in data for k in ('row', 'column', 'value', 'sheet_id')):
-        return jsonify({'message': 'Missing data'}), 400
+    if not auth_header or not all(k in auth_header for k in ('row', 'column', 'value', 'sheet_id')):
+        return jsonify({'message': 'Missing auth_header'}), 400
     
     new_cell = Cell(
-        row=data['row'],
-        column=data['column'],
-        value=data['value'],
-        sheet_id=data['sheet_id']
+        row=auth_header['row'],
+        column=auth_header['column'],
+        value=auth_header['value'],
+        sheet_id=auth_header['sheet_id']
     )
     
     try:
@@ -224,13 +281,13 @@ def update_cell(id):
     if not cell:
         return jsonify({'message': 'Cell not found'}), 404
 
-    data = request.json
-    if 'row' in data:
-        cell.row = data['row']
-    if 'column' in data:
-        cell.column = data['column']
-    if 'value' in data:
-        cell.value = data['value']
+    auth_header = request.json
+    if 'row' in auth_header:
+        cell.row = auth_header['row']
+    if 'column' in auth_header:
+        cell.column = auth_header['column']
+    if 'value' in auth_header:
+        cell.value = auth_header['value']
 
     try:
         db.session.commit()
@@ -243,12 +300,12 @@ def update_cell(id):
 # POST API to create a new Sheet
 @app.route('/sheets', methods=['POST'])
 def create_sheet():
-    data = request.json
+    auth_header = request.json
     
-    if not data or 'name' not in data:
-        return jsonify({'message': 'Missing data'}), 400
+    if not auth_header or 'name' not in auth_header:
+        return jsonify({'message': 'Missing auth_header'}), 400
     
-    new_sheet = Sheet(name=data['name'])
+    new_sheet = Sheet(name=auth_header['name'])
     
     try:
         db.session.add(new_sheet)
@@ -293,17 +350,4 @@ if __name__ == '__main__':
     # eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 5001)), app)
     socketio.run(app, host='0.0.0.0', port=5001,debug=True)
 
-# from flask import Flask, jsonify, request
 
-# app = Flask(__name__)
-
-# @app.route('/')
-# def home():
-#     return 'Hello, Flask!'
-
-# @app.route('/api/hello', methods=['GET'])
-# def api_hello():
-#     return jsonify(message='Hello, API!')
-
-# if __name__ == '__main__':
-#     app.run(debug=True)

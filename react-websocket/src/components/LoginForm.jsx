@@ -32,17 +32,15 @@ const Login = () => {
             });
             console.log(response.data);
             
-            localStorage.setItem('id', response.data.user_id); // Store user id in local storage
-            localStorage.setItem('username', response.data.username); // Store user id in local storage
-            localStorage.setItem('email', response.data.email); // Store user id in local storage
+            localStorage.setItem('token' , response.data.token)
             alert("Logged in successfully!");
             console.log(response.data.username);
             window.location.href = '/docs';
             // navigate('/docs', { state: { user: { username: response.data.username } } });
             // navigate('/docs'); // Use navigate for redirecting
         } catch (error) {
-            console.error(error);
-            alert(error);
+            console.error(error.response.data.message);
+            alert(`${error}\nmessage: ${error.response.data.message}` );
             // alert("Login failed. Please check your credentials.");
         }
     };
@@ -59,9 +57,8 @@ const Login = () => {
             });
             console.log(response.data);
             
-            localStorage.setItem('id', response.data.user_id); // Store user id in local storage
-            localStorage.setItem('username', response.data.username); // Store user id in local storage
-            localStorage.setItem('email', response.data.email); // Store user id in local storage
+            localStorage.setItem('token', response.data.token); // Store user id in local storage
+
             alert("Registered successfully!" , response.data);
             window.location.href = '/docs';
             // navigate('/docs'); // Use navigate for redirecting

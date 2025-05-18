@@ -36,7 +36,7 @@ return (
                     backgroundColor: randomColor, // Set random background color
                 }}
             >
-                {collaborator.username.toUpperCase().slice(0, 1)}
+                {collaborator ? collaborator.username.toUpperCase().slice(0, 1): 'A'}
             </span>
         );
     })}

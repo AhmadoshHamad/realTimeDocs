@@ -36,5 +36,5 @@ jobs:
             - name: Deploy via SCP and SSH
               run: |
                     cd react-websocket
-                    sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "rm -rf domains/linen-stingray-263248.hostingersite.com/public_html/*"
+                    sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "find domains/linen-stingray-263248.hostingersite.com/public_html/ -mindepth 1 ! -name '.env' ! -name '.htaccess' -exec rm -rf {} +"
                     sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} -r dist/* ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:domains/linen-stingray-263248.hostingersite.com/public_html/

@@ -1,17 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { initFlowbite } from 'flowbite';
 
 const DashboardNavbar = ({Isdocs}) => {
+  // Initialize Flowbite when component mounts
+  useEffect(() => {
+    // Initialize all Flowbite components
+    initFlowbite();
+  }, []);
+
   function logout(){
-    localStorage.removeItem('id');
+    localStorage.removeItem('token');
     window.location.href = '/login';
   }
-// console.log(user);
 
- console.log(Isdocs);
+  console.log(Isdocs);
 
- const username = localStorage.getItem('username');
- const email = localStorage.getItem('email');
+  const username = localStorage.getItem('username');
+  const email = localStorage.getItem('email');
 
   return (
     <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 ">
@@ -68,7 +74,7 @@ const DashboardNavbar = ({Isdocs}) => {
   <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
       <button type="button" className=" flex text-sm bg-red-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
         <span className="sr-only">Open user menu</span>
-        <div style={{ backgroundColor: Isdocs ? '#1E253B' : '#48752c' }} className='bg-slate-800 rounded-full p-3 px-4 text-white font-bold'>{username.toUpperCase().slice(0,1)}</div>
+        <div style={{ backgroundColor: Isdocs ? '#1E253B' : '#48752c' }} className='bg-slate-800 rounded-full p-3 px-4 text-white font-bold'>{username ?username.toUpperCase().slice(0,1): "A"}</div>
       </button>
       {/* <!-- Dropdown menu --> */}
       <div className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">

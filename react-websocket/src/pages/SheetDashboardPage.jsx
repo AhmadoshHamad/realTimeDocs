@@ -16,8 +16,12 @@ const SheetDashboardPage = () => {
   const [success, setSuccess] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
-      const id = localStorage.getItem('id');
-      const response = await axios.get(`${socketURL}/users/${id}/documents`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${socketURL}/users/${id}/documents`,{
+        headers : {
+          Authorization : token
+        }
+      });
       console.log(response.data);
       setDocuments(response.data);
     };

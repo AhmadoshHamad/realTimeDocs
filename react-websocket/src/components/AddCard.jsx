@@ -18,11 +18,22 @@ const AddCard = ({Isdocs}) => {
     async function addDocument(event){
         event.preventDefault(); // Prevent default form submission
         try{
-            const id = localStorage.getItem('id');
-            const response = await axios.post(`${socketURL}/documents/${id}`, {
-                name: name
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`${socketURL}/documents`,
+                {name : name} ,
+                {
+                headers :{
+                    Authorization : `Bearer ${token}`
+                } 
             });
-            console.log(response.data);
+            if (response.status === 201) {
+                console.log(response.data);
+                const docId = response.data.doc_id;
+                // alert("Document created successfully!");
+                window.location.href = `/editor/${docId}`;
+            } else {
+                alert("Failed to create document. Please try again.");
+            }
 
         }catch(error){
             console.error(error);
@@ -59,7 +70,7 @@ const AddCard = ({Isdocs}) => {
                                     onChange={(e) => setName(e.target.value)}
                                 />
                                 <button type="submit" className='p-1 px-5 mt-3 rounded bg-slate-800 text-white font-bold'>Create</button>
-                                <br /><br /> 
+                                <br /><br />  <br/>
         </form>
     </div>
 
